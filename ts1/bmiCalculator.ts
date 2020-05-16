@@ -1,13 +1,14 @@
+/*
 interface BmiValues {
   weight: number;
   height: number;
 }
-
+*/
 interface BmiResponse {
   data: string,
   error: string
 } 
-
+/*
 const parseArguments = (args: Array<string>): BmiValues => {
   if (args.length < 4) throw new Error('Not enough arguments');
   if (args.length > 4) throw new Error('Too many arguments');
@@ -21,8 +22,8 @@ const parseArguments = (args: Array<string>): BmiValues => {
     throw new Error('Provided values were not numbers!');
   }
 }
+*/
 const getBmiText = (bmi: number) => {
-console.log('bmi', bmi)  
   return bmi < 18.5 
     ?'underweight'
     : !(bmi > 25)
