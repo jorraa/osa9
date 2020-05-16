@@ -3,6 +3,11 @@ interface BmiValues {
   height: number;
 }
 
+interface BmiResponse {
+  data: string,
+  error: string
+} 
+
 const parseArguments = (args: Array<string>): BmiValues => {
   if (args.length < 4) throw new Error('Not enough arguments');
   if (args.length > 4) throw new Error('Too many arguments');
@@ -27,14 +32,17 @@ console.log('bmi', bmi)
         :'overweight' 
 }
 
-const bmiCalculator = (weight: number, height: number) : number => {
+const calculateBmi = (weight: number, height: number) : number => {
   return weight / Math.pow(height/100,2)
 }
 
-try {
-  const { weight, height } = parseArguments(process.argv);
-  if( height === 0) throw new Error('Can\'t divide by 0!');
-  console.log(getBmiText( bmiCalculator(weight, height)));
-} catch (e) {
-  console.log('Error, something bad happened, message: ', e.message);
+export const bmiCalculator = (height:number, weight: number ):BmiResponse => { 
+  try {
+    //const { weight, height } = parseArguments(process.argv);
+    if( height === 0) throw new Error('Can\'t divide by 0!');
+    return {data: getBmiText( calculateBmi(weight, height)), error:'' };
+  } catch (e) {
+    console.log('Error, something bad happened, message: ', e.message);
+    return { error: e.message, data: ''}
+  }
 }
