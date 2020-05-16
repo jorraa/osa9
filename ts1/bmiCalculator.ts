@@ -17,6 +17,7 @@ const parseArguments = (args: Array<string>): BmiValues => {
   }
 }
 const getBmiText = (bmi: number) => {
+console.log('bmi', bmi)  
   return bmi < 18.5 
     ?'underweight'
     : !(bmi > 25)
@@ -32,6 +33,7 @@ const bmiCalculator = (weight: number, height: number) : number => {
 
 try {
   const { weight, height } = parseArguments(process.argv);
+  if( height === 0) throw new Error('Can\'t divide by 0!');
   console.log(getBmiText( bmiCalculator(weight, height)));
 } catch (e) {
   console.log('Error, something bad happened, message: ', e.message);
