@@ -6,7 +6,7 @@
   "scripts": {
     "ts-node": "ts-node",
     "calculateBmi": "ts-node bmiCalculator.ts",
-    "exerciseResults": "ts-node exerciseCalculator 0 0 2 0 0 0 1 2"
+    "calculateExercises": "ts-node exerciseCalculator.ts"
   },
   "author": "JR",
   "license": "ISC",
