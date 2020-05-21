@@ -23,7 +23,7 @@ const Part: React.FC<{ part: CoursePart }>
       case "Deeper type usage": 
         rest = rest.concat(' ', part.description, ' ', part.exerciseSubmissionLink);
         break;
-      case "Temporarily arrays come from deep":
+      case "TypeScript looks good":
         rest = rest.concat(' ', part.description);
         break;
       default: 

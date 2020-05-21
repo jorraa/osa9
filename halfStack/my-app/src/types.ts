@@ -22,7 +22,7 @@ interface CoursePartThree extends CoursePartZero {
 }
 
 interface CoursePartFour extends CoursePartZero {
-  name: "Temporarily arrays come from deep";
+  name: "TypeScript looks good";
 }
 
 export type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree |CoursePartFour;
