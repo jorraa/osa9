@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 
-import { useStateValue } from "../state";
+import { useStateValue, setPatient } from "../state";
 import { Patient } from '../types';
 import { getPatient } from '../services/patientService';
 
@@ -13,7 +13,8 @@ const PatientPage: React.FC = () => {
 
   if(id !== patientId) {
     getPatient(id).then(  (patient: Patient ) => {
-      dispatch({ type: "SET_PATIENT", payload: patient });
+    //dispatch({ type: "SET_PATIENT", payload: patient });
+      dispatch(setPatient(patient));
       setPatientId(patient.id);
     });
   }
@@ -38,9 +39,7 @@ const PatientPage: React.FC = () => {
             <p>
               occupation: {patient.occupation}
             </p>
-        </div>
-  ;
-
+        </div>;
 };
 
 export default PatientPage;
