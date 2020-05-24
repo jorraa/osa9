@@ -13,10 +13,6 @@ export type Action =
   | {
       type: "SET_PATIENT";
       payload: Patient;
-    }
-    | {
-      type: "SET_PATIENT_ID";
-      payload: string;
     };
 
 export const reducer = (state: State, action: Action): State => {
@@ -44,9 +40,6 @@ export const reducer = (state: State, action: Action): State => {
       console.log('action', action);
       state.patient = action.payload;
       state.patientId = action.payload.id;
-      return state;
-    case "SET_PATIENT_ID":
-      //state.patientId = action.payload;
       return state;
     default:
       return state;

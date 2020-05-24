@@ -10,7 +10,7 @@ router.get('/', (_req, res) => {
 
 router.get('/:id', (_req, res) => {
   const id: string = _req.params.id;
-
+  console.log('id', id);
   try{
     res.send(patientService.getPatient(id));
   }catch(e) {
