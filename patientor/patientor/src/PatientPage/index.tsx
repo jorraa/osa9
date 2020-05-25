@@ -5,6 +5,13 @@ import { useStateValue, setPatient } from "../state";
 import { Patient, Entry } from '../types';
 import { getPatient } from '../services/patientService';
 
+import EntryDetails from './EntryDetails';
+
+const entryStyle = {
+  margin: 2,
+  border: 'solid'
+};
+
 const PatientPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   // eslint-disable-next-line
@@ -13,7 +20,6 @@ const PatientPage: React.FC = () => {
 
   if(id !== patientId) {
     getPatient(id).then(  (patient: Patient ) => {
-    //dispatch({ type: "SET_PATIENT", payload: patient });
       dispatch(setPatient(patient));
       setPatientId(patient.id);
     });
@@ -22,7 +28,7 @@ const PatientPage: React.FC = () => {
   if(!patient)  {
     return <p>patient not found</p>;
   }
-
+  
   const iconClass: string = patient.gender === 'female'
     ?'venus big icon'
     :patient.gender === 'male'
@@ -41,8 +47,12 @@ const PatientPage: React.FC = () => {
       </p>
       <p><b>entries</b></p>
       {Object.values(patient.entries).map((entry: Entry) => (
-        <div key={entry.id}>
-          <p>{entry.date} {entry.description}</p>
+        <div key={entry.id} style={ entryStyle }>
+          <p>
+            <b>{entry.date}</b>
+            <i aria-hidden="true" className='user doctor big icon'/> 
+          </p> 
+          <p>{entry.description}</p>
           <ul>
             {entry.diagnosisCodes && entry.diagnosisCodes.length>0
               ?Object.values(entry.diagnosisCodes.map((code) =>  
@@ -51,6 +61,9 @@ const PatientPage: React.FC = () => {
               :<></>
             }  
           </ul>
+          <div>
+            <EntryDetails entry={entry}/>
+          </div>
         </div>
       ))}
     </div>;
