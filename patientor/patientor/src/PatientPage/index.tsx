@@ -18,11 +18,10 @@ const PatientPage: React.FC = () => {
       setPatientId(patient.id);
     });
   }
-  const [{ patient }, ] = useStateValue();
+  const [{ patient, diagnosesCodes }, ] = useStateValue();
   if(!patient)  {
     return <p>patient not found</p>;
   }
-console.log('patient', patient);
 
   const iconClass: string = patient.gender === 'female'
     ?'venus big icon'
@@ -47,7 +46,7 @@ console.log('patient', patient);
           <ul>
             {entry.diagnosisCodes && entry.diagnosisCodes.length>0
               ?Object.values(entry.diagnosisCodes.map((code) =>  
-                <li key={code}>{code}</li>
+            <li key={code}>{code} {diagnosesCodes[code]?diagnosesCodes[code].name:'unknown code'}</li>
               ))  
               :<></>
             }  
