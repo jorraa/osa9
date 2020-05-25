@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { useStateValue, setPatient } from "../state";
-import { Patient } from '../types';
+import { Patient, Entry } from '../types';
 import { getPatient } from '../services/patientService';
 
 const PatientPage: React.FC = () => {
@@ -22,6 +22,7 @@ const PatientPage: React.FC = () => {
   if(!patient)  {
     return <p>patient not found</p>;
   }
+console.log('patient', patient);
 
   const iconClass: string = patient.gender === 'female'
     ?'venus big icon'
@@ -29,17 +30,31 @@ const PatientPage: React.FC = () => {
       ?'mars big icon'
       :'transgender alternate big icon';
     return <div>
-            <p>
-              <strong>{ patient.name } </strong>
-              <i aria-hidden="true" className={ iconClass }/>  
-            </p>
-            <p>
-              ssn: {patient.ssn}
-            </p>
-            <p>
-              occupation: {patient.occupation}
-            </p>
-        </div>;
+      <p>
+        <strong>{ patient.name } </strong>
+        <i aria-hidden="true" className={ iconClass }/>  
+      </p>
+      <p>
+        ssn: {patient.ssn}
+      </p>
+      <p>
+        occupation: {patient.occupation}
+      </p>
+      <p><b>entries</b></p>
+      {Object.values(patient.entries).map((entry: Entry) => (
+        <div key={entry.id}>
+          <p>{entry.date} {entry.description}</p>
+          <ul>
+            {entry.diagnosisCodes && entry.diagnosisCodes.length>0
+              ?Object.values(entry.diagnosisCodes.map((code) =>  
+                <li key={code}>{code}</li>
+              ))  
+              :<></>
+            }  
+          </ul>
+        </div>
+      ))}
+    </div>;
 };
 
 export default PatientPage;
