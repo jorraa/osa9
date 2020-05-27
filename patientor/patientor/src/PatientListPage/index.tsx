@@ -28,7 +28,6 @@ const PatientListPage: React.FC = () => {
         `${apiBaseUrl}/patients`,
         values
       );
-      //dispatch({ type: "ADD_PATIENT", payload: newPatient });
       dispatch(addPatient(newPatient));
       closeModal();
     } catch (e) {
