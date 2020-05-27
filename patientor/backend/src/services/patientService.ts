@@ -64,7 +64,7 @@ const parseAgain = (newEntry: NewEntry): Entry => {
 };
 
 const addPatientEntry = (patient: Patient, newEntry: NewEntry): Patient  => {
-  // I suppose database would make parsing(=add id) if we were using it
+  // I suppose database would add id if we were using it
   const entry: Entry  = parseAgain(newEntry);
 
   patient.entries.push(entry);
