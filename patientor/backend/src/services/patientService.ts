@@ -36,9 +36,11 @@ const addPatient = (patient: NewPatient): Patient  => {
   patients.push(newPatient);
   return newPatient;
 };
+
 const getId = (): string => {
   return 'A' + Math.floor(Math.random() * Math.floor(1000000000));
 };
+
 const parseAgain = (newEntry: NewEntry): Entry => {
   switch(newEntry.type) {
     case "Hospital": 
@@ -64,9 +66,11 @@ const parseAgain = (newEntry: NewEntry): Entry => {
 };
 
 const addPatientEntry = (patient: Patient, newEntry: NewEntry): Patient  => {
-  // I suppose database would add id if we were using it
+  /* 
+    I suppose database would add id if we were using it
+    or maybe there is some other way than "ParseAgain" to handle types.
+  */
   const entry: Entry  = parseAgain(newEntry);
-
   patient.entries.push(entry);
   return patient;
 };

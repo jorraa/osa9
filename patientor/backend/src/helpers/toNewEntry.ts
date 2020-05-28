@@ -109,6 +109,53 @@ const parseDiagnosisCodes = (diagnosisCodes: any): string[] => {
 
 export const toNewEntry = (obj: any): NewEntry => {
   const strType: string = parseType(obj.type);
+  
+  switch(strType) {
+    case 'Hospital': {
+      const newEntry: NewHospitalEntry = {
+        type: "Hospital",
+        description: parseDescription(obj.description),
+        date: parseDate(obj.date),
+        specialist: parseSpecialist(obj.specialist),
+        diagnosisCodes: parseDiagnosisCodes(obj.diagnosisCodes),
+        discharge: parseDischarge(obj.discharge),
+      };
+      return newEntry;
+    }
+    case 'HealthCheck': {
+      const newEntry: NewHealthCheckEntry = {
+        type: "HealthCheck",
+        description: parseDescription(obj.description),
+        date: parseDate(obj.date),
+        specialist: parseSpecialist(obj.specialist),
+        diagnosisCodes: parseDiagnosisCodes(obj.diagnosisCodes),
+        healthCheckRating: parseHealthCheckRating(obj.healthCheckRating)
+      };
+      return newEntry;
+    }
+    case 'OccupationalHealthcare': {
+      const newEntry: NewOccupationalHealthcareEntry = {
+        type: "OccupationalHealthcare",
+        description: parseDescription(obj.description),
+        date: parseDate(obj.date),
+        specialist: parseSpecialist(obj.specialist),
+        diagnosisCodes: parseDiagnosisCodes(obj.diagnosisCodes),
+        employerName: parseEmployerName(obj.employerName),
+        sickLeave: parseSickLeave(obj.sickLeave)
+      };
+      return newEntry;
+    }
+    default:
+      throw new Error('unknown entry type');
+  }
+};
+
+export default toNewEntry;
+
+/*
+Keeping the development path of toNewEntry for reference, maybe later use 
+export const toNewEntryV2 = (obj: any): NewEntry => {
+  const strType: string = parseType(obj.type);
   const newBaseEntry = {
     description: parseDescription(obj.description),
     date: parseDate(obj.date),
@@ -190,4 +237,3 @@ console.log('toHealthCheck');
   return newEntry;
 };
 */
-export default toNewEntry;
