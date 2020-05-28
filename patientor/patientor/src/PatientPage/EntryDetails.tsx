@@ -9,7 +9,7 @@ const assertNever = (value: never): never => {
 };
 
 const EntryDetails: React.FC<{ entry: Entry }> = ({ entry}) => {
-  
+  console.log('entry---ERROR?', entry);
   switch(entry.type) {
     case "Hospital":
       return <HospitalEntryPage { ...entry }/>;

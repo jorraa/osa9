@@ -4,6 +4,7 @@ type SET_PATIENT = 'SET_PATIENT';
 type SET_PATIENT_LIST = 'SET_PATIENT_LIST';
 type ADD_PATIENT = 'ADD_PATIENT';
 type SET_DIAGNOSES_CODES = 'SET_DIAGNOSES_CODES';
+
 export type Action =
   | {
       type: SET_PATIENT_LIST;
@@ -57,7 +58,7 @@ export const reducer = (state: State, action: Action): State => {
             (memo, diagnosis) => ({ ...memo, [diagnosis.code]: diagnosis }),
             {}
           ),
-          ...state.patients
+          ...state.diagnosesCodes
         }
       };
     default:
