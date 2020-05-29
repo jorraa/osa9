@@ -58,9 +58,9 @@ const parseType = (type: string ): string => {
 };
 
 const parseDischarge = (discharge: any): Discharge => {
-   
-  if(!isDate(discharge.date)) {
-    throw new Error('Incorrect or missing discharge.date ' + discharge.date);   
+  const val = discharge.date;
+  if (!val || !isString(val) || !isDate(val)) {
+    throw new Error('Incorrect or missing discharge.date: ' + val);
   }
   if(!isString(discharge.criteria)) {
     throw new Error('Incorrect or missing discharge.criteria ' + discharge.criteria);   
@@ -72,11 +72,19 @@ const parseDischarge = (discharge: any): Discharge => {
 };
 
 const parseSickLeave = (sickLeave: any): SickLeave => {
-   
+  let val = sickLeave.startDate;
+  if (!val || !isString(val) || !isDate(val)) {
+    throw new Error('Incorrect or missing sickLeave.startDate: ' + val);
+  }
+  val = sickLeave.endDate;
+  if (!val || !isString(val) || !isDate(val)) {
+    throw new Error('Incorrect or missing sickLeave.endDate: ' + val);
+  }
+
   if(!isDate(sickLeave.startDate)) {
     throw new Error('Incorrect or missing sickLeave.startDate ' + sickLeave.startDate);   
   }
-  if(!isString(sickLeave.endDate)) {
+  if(!isDate(sickLeave.endDate)) {
     throw new Error('Incorrect or missing sickLeave.endDate ' + sickLeave.endDate);   
   }
   return {
@@ -109,7 +117,7 @@ const parseDiagnosisCodes = (diagnosisCodes: any): string[] => {
 
 export const toNewEntry = (obj: any): NewEntry => {
   const strType: string = parseType(obj.type);
-  
+
   switch(strType) {
     case 'Hospital': {
       const newEntry: NewHospitalEntry = {
