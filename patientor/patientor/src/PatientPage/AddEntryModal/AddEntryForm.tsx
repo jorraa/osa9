@@ -4,19 +4,16 @@ import { Field, Formik, Form } from "formik";
 
 import { useStateValue } from "../../state";
 
-import { TextField, NumberField, DiagnosisSelection } from "./FormField";
+import { TextField, NumberField, DiagnosisSelection, NestedTextField } from "./FormField";
 import { HospitalEntry } from '../../types';
  
-type NestedErrors = {
-  dischargeDateError: string;
-};
-
 // eslint-disable-next-line
 const isString = (text: any): text is string => {
   return typeof text === 'string' || text instanceof String;
 };
 
 const isDate = (date: string): boolean => {
+  if(date.split('-').length !== 3) {return false;}
   return Boolean(Date.parse(date));
 };
 
@@ -30,6 +27,7 @@ const isNumber = (val: any): boolean => {
 
 export type HospitalFormValues = Omit<HospitalEntry, "id">;
 
+
 interface Props {
   onSubmit: (values: HospitalFormValues) => void;
   onCancel: () => void;
@@ -38,7 +36,6 @@ interface Props {
 export const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
 
   const [{ diagnosesCodes }, ] = useStateValue();
-  
   return (
     <Formik
       initialValues={{
@@ -53,7 +50,7 @@ export const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) =>
         } 
       }}
       onSubmit={onSubmit}
-      validate={values => {
+      validate={ (values) => {
         const requiredError = "Field is required";
         const errors: { [field: string]: string } = {};
         if (!values.description) {
@@ -81,8 +78,7 @@ export const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) =>
         if (!values.discharge.criteria) {
           errors['discharge.criteria'] = requiredError;
         }
-
-        console.log('ERRORS--->', errors);
+        //console.log('ERRORS--->', errors);
         return errors;
       }}
     >
@@ -112,11 +108,11 @@ export const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) =>
               setFieldTouched={setFieldTouched}
               diagnoses={Object.values(diagnosesCodes)}
             />    
-            <Field 
+            <Field
                 label="Discharge date"
                 placeholder='YYYY-MM-DD'
                 name='discharge.date'
-                component={TextField}
+                component={NestedTextField}
             />
             <span id='dischargeDate' style={{ color:'red' }}></span>
 
@@ -124,7 +120,7 @@ export const AddHospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) =>
                 label="Discharge criteria"
                 placeholder='criteria'
                 name='discharge.criteria'
-                component={TextField}
+                component={NestedTextField}
             />
 
             <Grid>

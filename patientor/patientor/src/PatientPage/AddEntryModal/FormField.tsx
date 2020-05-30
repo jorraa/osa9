@@ -2,6 +2,7 @@ import React from "react";
 import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
 import { Dropdown, DropdownProps, Form } from "semantic-ui-react";
 import { Diagnosis } from "../../types";
+import { parseTouched} from './util';
 
 // structure of a single option
 export type DiagnosisCodeOption = {
@@ -37,6 +38,11 @@ interface TextProps extends FieldProps {
   label: string;
   placeholder: string;
 }
+interface NestedTextProps extends FieldProps {
+  name: string;
+  label: string;
+  placeholder: string;
+}
 
 export const TextField: React.FC<TextProps> = ({
   field,
@@ -51,6 +57,53 @@ export const TextField: React.FC<TextProps> = ({
     </div>
   </Form.Field>
 );
+
+/*
+  for nested fields like discharge.date
+*/
+
+export const NestedTextField: React.FC<NestedTextProps> = ({
+  field,
+  name,
+  form: { touched, errors },
+  label,
+  placeholder,
+  ...props
+}) => {
+  return <div>
+    <label>{label}</label>
+    <input type="text" placeholder={placeholder} name={name} {...field} {...props} />
+    {parseTouched(field.name, touched) &&
+      errors[field.name] && 
+      <div style={{ color:'red' }}>{errors[field.name]}</div>}
+  </div>;
+};
+
+/*
+export const TextFieldNested: React.FC<TextProps> = ({
+  field,
+  label,
+  placeholder,
+  setFieldValue,
+  setFieldError
+}) => {
+  const onChange = (
+    _event: React.SyntheticEvent<HTMLElement, Event>,
+    data: string
+  ) => {
+    setFieldTouched(field, true);
+    setFieldValue(field, data.value);
+  };
+
+  return <Form.Field>
+    <label>{label}</label>
+    <Field placeholder={placeholder} {...field} />
+    <div style={{ color:'red' }}>
+      <ErrorMessage name={field.name} />
+    </div>
+  </Form.Field>;
+};
+*/
 
 /*
   for exercises 9.24.-

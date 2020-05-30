@@ -46,7 +46,21 @@ const PatientPage: React.FC = () => {
     return <p>patient not found</p>;
   }
   
-  const submitNewEntry = async (values: HospitalFormValues) => {
+  const submitNewEntryHosp = async (values: HospitalFormValues) => {
+    try {
+      const { data: patient } = await axios.post<Patient>(
+        `${apiBaseUrl}/patients/${patientId}/entries`,
+        values
+      );
+      dispatch(setPatient(patient));
+      closeModal();
+    } catch (e) {
+      console.error(e.response.data);
+      setError(e.response.data);
+    }
+  };
+
+  const submitNewEntryHealth = async (values: HospitalFormValues) => {
     try {
       const { data: patient } = await axios.post<Patient>(
         `${apiBaseUrl}/patients/${patientId}/entries`,
@@ -80,7 +94,9 @@ const PatientPage: React.FC = () => {
       <p><b>entries</b></p>
       <AddEntryModal
         modalOpen={modalOpen}
-        onSubmit={submitNewEntry}
+        onSubmit={submitNewEntryHosp}
+        //onSubmitHealth={submitNewEntryHealth}
+        //onSubmitOccu={submitNewEntryOccu}
         error={error}
         onClose={closeModal}
       />
