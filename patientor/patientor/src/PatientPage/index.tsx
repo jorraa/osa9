@@ -12,7 +12,9 @@ import { getPatient } from '../services/patientService';
 import EntryDetails from './EntryDetails';
 import AddEntryModal from './AddEntryModal';
 
-import { HospitalFormValues } from './AddEntryModal/AddEntryForm';
+import { NewEntry //, NewHospitalEntry, NewHealthCheckEntry, NewOccupationalHealthcareEntry,
+  //HOSPITAL, HEALTH_CHECK, OCCUPATINAL_HEALTHCARE 
+ } from '../types';
 
 const entryStyle = {
   margin: 2,
@@ -27,7 +29,7 @@ const PatientPage: React.FC = () => {
 
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
-
+  const [entryType, setEntryType] = React.useState('');
   const openModal = (): void => setModalOpen(true);
 
   const closeModal = (): void => {
@@ -45,8 +47,23 @@ const PatientPage: React.FC = () => {
   if(!patient)  {
     return <p>patient not found</p>;
   }
-  
-  const submitNewEntryHosp = async (values: HospitalFormValues) => {
+  /*
+  const submitNewEntry = async (values: NewEntry) => {
+    try {
+      const { data: patient } = await axios.post<Patient>(
+        `${apiBaseUrl}/patients/${patientId}/entries`,
+        values
+      );
+      dispatch(setPatient(patient));
+      closeModal();
+    } catch (e) {
+      console.error(e.response.data);
+      setError(e.response.data);
+    }
+  };
+*/
+
+  const submitNewEntryHosp = async (values: NewEntry) => {
     try {
       const { data: patient } = await axios.post<Patient>(
         `${apiBaseUrl}/patients/${patientId}/entries`,
@@ -60,7 +77,7 @@ const PatientPage: React.FC = () => {
     }
   };
 
-  const submitNewEntryHealth = async (values: HospitalFormValues) => {
+  const submitNewEntryHealth = async (values: NewEntry) => {
     try {
       const { data: patient } = await axios.post<Patient>(
         `${apiBaseUrl}/patients/${patientId}/entries`,
@@ -74,7 +91,23 @@ const PatientPage: React.FC = () => {
     }
   };
 
+  const submitNewEntryOccu = async (values: NewEntry) => {
+    try {
+      const { data: patient } = await axios.post<Patient>(
+        `${apiBaseUrl}/patients/${patientId}/entries`,
+        values
+      );
+      dispatch(setPatient(patient));
+      closeModal();
+    } catch (e) {
+      console.error(e.response.data);
+      setError(e.response.data);
+    }
+  };
 
+  const submitNewEntry = entryType === 'Hospital'? submitNewEntryHosp
+    : entryType === 'HealthCheck'? submitNewEntryHealth
+      : submitNewEntryOccu;
   const iconClass: string = patient.gender === 'female'
     ?'venus big icon'
     :patient.gender === 'male'
@@ -94,14 +127,29 @@ const PatientPage: React.FC = () => {
       <p><b>entries</b></p>
       <AddEntryModal
         modalOpen={modalOpen}
-        onSubmit={submitNewEntryHosp}
-        //onSubmitHealth={submitNewEntryHealth}
+        entryType={entryType}
+        onSubmit={submitNewEntry}
+        //onSubmitHosp={submitNewEntryHosp}
+        //onSubmitHealth={submitNewEntryHealth }
         //onSubmitOccu={submitNewEntryOccu}
         error={error}
         onClose={closeModal}
       />
-
-      <Button onClick={() => openModal()}>Add New Entry</Button>
+      <Button onClick={() => {
+        setEntryType('Hospital');
+        openModal(); }
+      } >Add New Hospital Entry
+      </Button>
+      <Button onClick={() => {
+        setEntryType('HealthCheck');
+        openModal(); }
+      } >Add New Health Check Entry
+      </Button>
+      <Button onClick={() => {
+        setEntryType('OccpationalHealthCare');
+        openModal(); }
+      } >Add New Occupational Healthcare Entry
+      </Button>
       {Object.values(patient.entries).map((entry: Entry) => (
         <div key={entry.id} style={ entryStyle }>
           <p>

@@ -37,24 +37,29 @@ export const SelectField: React.FC<SelectFieldProps> = ({
 interface TextProps extends FieldProps {
   label: string;
   placeholder: string;
+  className: string;
 }
 interface NestedTextProps extends FieldProps {
   name: string;
   label: string;
   placeholder: string;
+  className: string;
 }
 
 export const TextField: React.FC<TextProps> = ({
   field,
   label,
-  placeholder
-}) => (
+  placeholder,
+  className
+  }) => (
   <Form.Field>
+    <span className={className}>
     <label>{label}</label>
     <Field placeholder={placeholder} {...field} />
     <div style={{ color:'red' }}>
       <ErrorMessage name={field.name} />
     </div>
+    </span>
   </Form.Field>
 );
 
@@ -68,9 +73,10 @@ export const NestedTextField: React.FC<NestedTextProps> = ({
   form: { touched, errors },
   label,
   placeholder,
+  className,
   ...props
 }) => {
-  return <div>
+  return <div className={className}>
     <label>{label}</label>
     <input type="text" placeholder={placeholder} name={name} {...field} {...props} />
     {parseTouched(field.name, touched) &&

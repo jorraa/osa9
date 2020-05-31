@@ -1,3 +1,7 @@
+export type HOSPITAL = "Hospital"; 
+export type OCCUPATINAL_HEALTHCARE = "OccupationalHealthcare";
+export type HEALTH_CHECK = "HealthCheck";
+
 export interface Diagnosis {
   code: string;
   name: string;
@@ -46,15 +50,20 @@ interface Discharge {
 }
 
 export interface HospitalEntry extends BaseEntry{
-  type: "Hospital";
+  type: HOSPITAL;
   discharge: Discharge;
 }
 
 export interface OccupationalHealthcareEntry extends BaseEntry{
-  type: "OccupationalHealthcare";
+  type: OCCUPATINAL_HEALTHCARE;
   employerName: string;
   sickLeave?: SickLeave;
 
+}
+
+export interface HealthCheckEntry extends BaseEntry {
+  type: HEALTH_CHECK;
+  healthCheckRating: HealthCheckRating;
 }
 
 export type Entry =
@@ -62,7 +71,13 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
 
-export interface HealthCheckEntry extends BaseEntry {
-  type: "HealthCheck";
-  healthCheckRating: HealthCheckRating;
-}
+
+export type NewHospitalEntry = Omit<HospitalEntry, 'id'>;
+export type NewHealthCheckEntry = Omit<HealthCheckEntry, 'id'>;
+export type NewOccupationalHealthcareEntry 
+            = Omit<OccupationalHealthcareEntry, 'id'>;
+
+export type NewEntry = 
+| NewHospitalEntry
+| NewHealthCheckEntry
+| NewOccupationalHealthcareEntry;
