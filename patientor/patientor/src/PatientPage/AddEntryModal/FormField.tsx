@@ -1,7 +1,7 @@
 import React from "react";
 import { ErrorMessage, Field, FieldProps, FormikProps } from "formik";
 import { Dropdown, DropdownProps, Form } from "semantic-ui-react";
-import { Diagnosis } from "../../types";
+import { Diagnosis, HealthCheckRating } from "../../types";
 import { parseTouched} from './util';
 
 // structure of a single option
@@ -10,27 +10,39 @@ export type DiagnosisCodeOption = {
   label: string;
 };
 
+// structure of a single option
+export type HealthRatingOption = {
+  value: HealthCheckRating;
+  label: string;
+};
+
 // props for select field component
 type SelectFieldProps = {
   name: string;
   label: string;
-  options: [{"value": '123'; "label": 'dianosisCode'}];
+  options: HealthRatingOption[];
+  className: string;
 };
 
 export const SelectField: React.FC<SelectFieldProps> = ({
   name,
   label,
-  options
+  options,
+  className
 }: SelectFieldProps) => (
   <Form.Field>
-    <label>{label}</label>
-    <Field as="select" name={name} className="ui dropdown">
-      {options.map(option => (
-        <option key={option.value} value={option.value}>
-          {option.label || option.value}
-        </option>
-      ))}
-    </Field>
+    <span className={className}>
+      <label>{label}</label>
+      <Field as="select" name={name} className="ui dropdown"
+        placeholder='choose diagnosis' >
+        {options.map(option => (
+          <option key={option.value} value={option.value} 
+            selected={!option.value?true:false}>
+            {option.label || option.value}
+          </option>
+        ))}
+      </Field>
+    </span>
   </Form.Field>
 );
 
@@ -84,32 +96,6 @@ export const NestedTextField: React.FC<NestedTextProps> = ({
       <div style={{ color:'red' }}>{errors[field.name]}</div>}
   </div>;
 };
-
-/*
-export const TextFieldNested: React.FC<TextProps> = ({
-  field,
-  label,
-  placeholder,
-  setFieldValue,
-  setFieldError
-}) => {
-  const onChange = (
-    _event: React.SyntheticEvent<HTMLElement, Event>,
-    data: string
-  ) => {
-    setFieldTouched(field, true);
-    setFieldValue(field, data.value);
-  };
-
-  return <Form.Field>
-    <label>{label}</label>
-    <Field placeholder={placeholder} {...field} />
-    <div style={{ color:'red' }}>
-      <ErrorMessage name={field.name} />
-    </div>
-  </Form.Field>;
-};
-*/
 
 /*
   for exercises 9.24.-

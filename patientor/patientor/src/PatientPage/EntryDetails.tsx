@@ -44,6 +44,7 @@ const OccupationalHealthcarePage  = ( entry: OccupationalHealthcareEntry ) => {
 
 const HealthCheckPage = ( entry: HealthCheckEntry ) => {
   return <div style={entryDetailStyle} >
+    <p>specialist: {entry.specialist}</p>
     <HealthRatingBar showText={true} rating={entry.healthCheckRating} />
   </div>;
 };

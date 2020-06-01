@@ -5,9 +5,10 @@ import { Field, Formik, Form } from "formik";
 import { useStateValue } from "../../state";
 import './entry.css';
 
-import { TextField, NumberField, DiagnosisSelection, NestedTextField } from "./FormField";
-import { /*NewEntry,*/ NewHospitalEntry, NewHealthCheckEntry, NewOccupationalHealthcareEntry, HOSPITAL, HEALTH_CHECK, OCCUPATINAL_HEALTHCARE,
-/*HOSPITAL, HEALTH_CHECK, OCCUPATINAL_HEALTHCARE*/ } from '../../types';
+import { TextField, DiagnosisSelection,
+   NestedTextField, SelectField, HealthRatingOption } from "./FormField";
+import { NewHospitalEntry, NewHealthCheckEntry, NewOccupationalHealthcareEntry,
+   HOSPITAL, HEALTH_CHECK, OCCUPATINAL_HEALTHCARE, HealthCheckRating, } from '../../types';
  
 // eslint-disable-next-line
 const isString = (text: any): text is string => {
@@ -27,18 +28,12 @@ const isNumber = (val: any): boolean => {
   return false;
 };
 interface Props {
-  entryType: string; //"Hospital"|"HealthCheck"|"OccupationalHealthCare"; //HOSPITAL| HEALTH_CHECK | OCCUPATINAL_HEALTHCARE;
+  entryType: string;
   onSubmit: (values: NewHospitalEntry|NewHealthCheckEntry|NewOccupationalHealthcareEntry) => void; 
-  //onSubmitHosp: (values: NewHospitalEntry) => void;
-  //onSubmitHealth: (values: NewHealthCheckEntry) => void;
-  //onSubmitOccu: (values: NewOccupationalHealthcareEntry) => void;
   onCancel: () => void;
 }
 
 export const AddEntryForm: React.FC<Props> = ({ entryType, onSubmit, onCancel }) => {
-//  const onSubmit = entryType === 'Hospital'?onSubmitHosp
-//    :entryType === 'HealthCheck'?onSubmitHealth
-//      :onSubmitOccu;
 
   const hospType: HOSPITAL = 'Hospital';
   const healthType: HEALTH_CHECK = 'HealthCheck';
@@ -74,19 +69,18 @@ export const AddEntryForm: React.FC<Props> = ({ entryType, onSubmit, onCancel })
     },
     ...baseValues
   };
-
-  const hospClass = entryType === 'Hospital'
-    ? 'show'
-    : 'hide';
-  const healthClass = entryType === 'HealthCheck'
-    ? 'show'
-    : 'hide';
-  const occuClass = entryType === 'OccupationalHealthcare'
-    ? 'show'
-    : 'hide';
-
+  const hospClass = entryType === 'Hospital'? '':'hide';
+  const healthClass = entryType === 'HealthCheck'?'':'hide';
+  const occuClass = entryType === 'OccupationalHealthcare'?'':'hide';
   const [{ diagnosesCodes }, ] = useStateValue();
 
+  const healthRatingOptions: HealthRatingOption[] = [
+    { "value": HealthCheckRating.Healthy, label: "Healthy" },
+    { "value": HealthCheckRating.LowRisk, label: "LowRisk" },
+    { "value": HealthCheckRating.HighRisk, label: "HighRisk" },
+    { "value": HealthCheckRating.CriticalRisk, label: "CriticalRisk" }
+  ];
+  
   return (
     <Formik
       initialValues={{
@@ -95,22 +89,6 @@ export const AddEntryForm: React.FC<Props> = ({ entryType, onSubmit, onCancel })
             : occuValues)
         }
       }
-      /*
-        initialValues={{
-        type: 'Hospital',
-        description: '',
-        date: '',
-        specialist: '',
-        diagnosisCodes: [],
-        discharge: {
-          date: '',
-          criteria: ''
-        }, 
-        healthCheckRating: 0,
-        employerName: '',
-        sickLeave: undefined
-      }}
-  */
       onSubmit={onSubmit}
       validate={ (values) => {
         const requiredError = "Field is required";
@@ -150,6 +128,14 @@ export const AddEntryForm: React.FC<Props> = ({ entryType, onSubmit, onCancel })
             if (!values.sickLeave.startDate) {
               errors['sickLeave.startDate'] = requiredError;
             }else{
+              const val = values.sickLeave.startDate;
+              if (!isString(val) || !isDate(val)) {
+                errors['sickLeave.startDate'] ='Incorrect sickLeave.startDdate: ' + val;
+              }
+            }
+            if (!values.sickLeave.endDate) {
+                errors['sickLeave.endDate'] = requiredError;
+            }else{
               const val = values.sickLeave.endDate;
               if (!isString(val) || !isDate(val)) {
                 errors['sickLeave.endDate'] ='Incorrect sickLeave.endDdate: ' + val;
@@ -158,7 +144,7 @@ export const AddEntryForm: React.FC<Props> = ({ entryType, onSubmit, onCancel })
             if(values.sickLeave.startDate > values.sickLeave.endDate) {
               const val = values.sickLeave.endDate;
               errors['sickLeave.endDate'] =
-                'Incorrect sickLeave.endDdate, must be later than startDate: ' + val;
+                'Incorrect sickLeave.endDdate (' + val + '), cannot be earlier than startDate.';
             }
           }
           if (!values.employerName) {
@@ -167,12 +153,9 @@ export const AddEntryForm: React.FC<Props> = ({ entryType, onSubmit, onCancel })
         }
         if(values.type === 'HealthCheck') {
           if(values.healthCheckRating < 0 || values.healthCheckRating > 3) {
-            errors['healthCheckRating'] = 'healthCheck rating must be between 0 and 4';
+            errors['healthCheckRating'] = 'healthCheck rating must be between 0 and 3';
           }
         }
-
-
-        //console.log('ERRORS--->', errors);
         return errors;
       }}
     >
@@ -220,14 +203,14 @@ export const AddEntryForm: React.FC<Props> = ({ entryType, onSubmit, onCancel })
                 className={hospClass}
             />
             <span id='discharge.criteria' style={{ color:'red' }}></span>
-            <Field 
-              label='Health check rating'
-              name='healthCheckRating'
-              min={0}
-              max={3}
-              component={NumberField}
+
+           <SelectField
+              label="Health check rating"
+              name="healthCheckRating"
+              options={healthRatingOptions}
               className={healthClass}
             />
+
             <Field
               label='Employer name'  
               placeholder='employer name'
@@ -242,6 +225,8 @@ export const AddEntryForm: React.FC<Props> = ({ entryType, onSubmit, onCancel })
               component={NestedTextField}
               className={occuClass}
             />
+            <span id='sickLeave.startDate' style={{ color:'red' }}></span>
+
             <Field 
               label="Sickleave end date"
               placeholder='YYYY-MM-DD'
@@ -249,6 +234,7 @@ export const AddEntryForm: React.FC<Props> = ({ entryType, onSubmit, onCancel })
               component={NestedTextField}
               className={occuClass}
             />  
+            <span id='sickLeave.endDate' style={{ color:'red' }}></span>
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">

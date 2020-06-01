@@ -50,7 +50,6 @@ export const reducer = (state: State, action: Action): State => {
       state.patientId = action.payload.id;
       return state;
     case "SET_DIAGNOSES_CODES":
-      console.log('action', action);
       return {
         ...state,
         diagnosesCodes: {

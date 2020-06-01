@@ -12,9 +12,7 @@ import { getPatient } from '../services/patientService';
 import EntryDetails from './EntryDetails';
 import AddEntryModal from './AddEntryModal';
 
-import { NewEntry //, NewHospitalEntry, NewHealthCheckEntry, NewOccupationalHealthcareEntry,
-  //HOSPITAL, HEALTH_CHECK, OCCUPATINAL_HEALTHCARE 
- } from '../types';
+import { NewEntry } from '../types';
 
 const entryStyle = {
   margin: 2,
@@ -47,7 +45,7 @@ const PatientPage: React.FC = () => {
   if(!patient)  {
     return <p>patient not found</p>;
   }
-  /*
+  
   const submitNewEntry = async (values: NewEntry) => {
     try {
       const { data: patient } = await axios.post<Patient>(
@@ -61,53 +59,7 @@ const PatientPage: React.FC = () => {
       setError(e.response.data);
     }
   };
-*/
 
-  const submitNewEntryHosp = async (values: NewEntry) => {
-    try {
-      const { data: patient } = await axios.post<Patient>(
-        `${apiBaseUrl}/patients/${patientId}/entries`,
-        values
-      );
-      dispatch(setPatient(patient));
-      closeModal();
-    } catch (e) {
-      console.error(e.response.data);
-      setError(e.response.data);
-    }
-  };
-
-  const submitNewEntryHealth = async (values: NewEntry) => {
-    try {
-      const { data: patient } = await axios.post<Patient>(
-        `${apiBaseUrl}/patients/${patientId}/entries`,
-        values
-      );
-      dispatch(setPatient(patient));
-      closeModal();
-    } catch (e) {
-      console.error(e.response.data);
-      setError(e.response.data);
-    }
-  };
-
-  const submitNewEntryOccu = async (values: NewEntry) => {
-    try {
-      const { data: patient } = await axios.post<Patient>(
-        `${apiBaseUrl}/patients/${patientId}/entries`,
-        values
-      );
-      dispatch(setPatient(patient));
-      closeModal();
-    } catch (e) {
-      console.error(e.response.data);
-      setError(e.response.data);
-    }
-  };
-
-  const submitNewEntry = entryType === 'Hospital'? submitNewEntryHosp
-    : entryType === 'HealthCheck'? submitNewEntryHealth
-      : submitNewEntryOccu;
   const iconClass: string = patient.gender === 'female'
     ?'venus big icon'
     :patient.gender === 'male'
@@ -129,9 +81,6 @@ const PatientPage: React.FC = () => {
         modalOpen={modalOpen}
         entryType={entryType}
         onSubmit={submitNewEntry}
-        //onSubmitHosp={submitNewEntryHosp}
-        //onSubmitHealth={submitNewEntryHealth }
-        //onSubmitOccu={submitNewEntryOccu}
         error={error}
         onClose={closeModal}
       />
@@ -146,7 +95,7 @@ const PatientPage: React.FC = () => {
       } >Add New Health Check Entry
       </Button>
       <Button onClick={() => {
-        setEntryType('OccpationalHealthCare');
+        setEntryType('OccupationalHealthcare');
         openModal(); }
       } >Add New Occupational Healthcare Entry
       </Button>
